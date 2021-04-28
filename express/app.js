@@ -2,22 +2,24 @@ import Router from './bird/index.js';
 
 export default (express, bodyParser, createReadStream, crypto, http) => {
   const app = express();
-  const hu = {
-    "Content-Type": "text/html; charset=utf-8",
-    "Access-Control-Allow-Origin": "*",
-    "Access-Control-Allow-Methods": "GET, POST, PUT, PATCH, OPTIONS, DELETE"
-  };
+  const login = 'olegrasputina';
+  const CORS = {
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Methods': 'GET,POST,PUT,PATCH,OPTIONS,DELETE',
+    'Access-Control-Allow-Headers': 'Content-Type, Accept, Access-Control-Allow-Headers',
+    'Content-Type': 'text/plain; charset=utf-8'
+};
 
 
   app
-    .use((req, res, n) => res.set(hu) && n())
+    .use((req, res, n) => res.set(CORS) && n())
     .use(bodyParser.urlencoded({ extended: true }))
+    .use(bodyParser.json())
     // .use(express.urlencoded({extended: true}))
     .use('/', Router(express, bodyParser, createReadStream, crypto, http))
-    .all('*', (req, res) => {
+    .all('/*', (req, res) => {
       res
-      .status(404)
-      .end('olegrasputina');
+      .send(login);
     });
 
   return app;
